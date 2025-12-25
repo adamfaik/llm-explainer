@@ -1,17 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How LLMs Work: An Interactive Guide</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#1e293b',
+                            950: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
 
         body {
             font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
         }
 
         .code-font {
@@ -23,11 +37,14 @@
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #f1f1f1; 
+            background: transparent; 
         }
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1; 
             border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8; 
@@ -80,37 +97,46 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300">
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-slate-200 z-50">
+    <nav class="fixed top-0 w-full bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 z-50 transition-colors duration-300">
         <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-2 font-bold text-xl text-blue-600">
+            <div class="flex items-center space-x-2 font-bold text-xl text-blue-600 dark:text-blue-500">
                 <i data-lucide="brain-circuit"></i>
                 <span>LLM Explainer</span>
             </div>
-            <div class="hidden md:flex space-x-6 text-sm font-medium text-slate-600">
-                <a href="#intro" class="hover:text-blue-600 transition">Intro</a>
-                <a href="#tokenization" class="hover:text-blue-600 transition">1. Tokens</a>
-                <a href="#embeddings" class="hover:text-blue-600 transition">2. Embeddings</a>
-                <a href="#attention" class="hover:text-blue-600 transition">3. Attention</a>
-                <a href="#prediction" class="hover:text-blue-600 transition">4. Prediction</a>
+            
+            <div class="flex items-center space-x-6">
+                <div class="hidden md:flex space-x-6 text-sm font-medium text-slate-600 dark:text-slate-400">
+                    <a href="#intro" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Intro</a>
+                    <a href="#tokenization" class="hover:text-blue-600 dark:hover:text-blue-400 transition">1. Tokens</a>
+                    <a href="#embeddings" class="hover:text-blue-600 dark:hover:text-blue-400 transition">2. Embeddings</a>
+                    <a href="#attention" class="hover:text-blue-600 dark:hover:text-blue-400 transition">3. Attention</a>
+                    <a href="#prediction" class="hover:text-blue-600 dark:hover:text-blue-400 transition">4. Prediction</a>
+                </div>
+
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Toggle Dark Mode">
+                    <i data-lucide="moon" class="w-5 h-5 hidden dark:block"></i>
+                    <i data-lucide="sun" class="w-5 h-5 block dark:hidden"></i>
+                </button>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <header id="intro" class="pt-32 pb-20 px-4 text-center max-w-4xl mx-auto">
-        <div class="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-6">
+        <div class="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-sm font-medium mb-6 border border-blue-200 dark:border-blue-800">
             <i data-lucide="sparkles" class="w-4 h-4 mr-2"></i> Interactive Demo
         </div>
-        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-6">
-            Inside the <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">AI's Brain</span>
+        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
+            Inside the <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">AI's Brain</span>
         </h1>
-        <p class="text-xl text-slate-600 mb-10 max-w-2xl mx-auto">
+        <p class="text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto">
             Large Language Models (LLMs) aren't magic. They are giant math machines that predict the next piece of text. Let's break open the black box.
         </p>
-        <a href="#tokenization" class="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+        <a href="#tokenization" class="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
             Start the Journey
             <i data-lucide="arrow-down" class="ml-2 w-5 h-5"></i>
         </a>
@@ -121,32 +147,32 @@
         <!-- STEP 1: TOKENIZATION -->
         <section id="tokenization" class="scroll-mt-24">
             <div class="flex items-center mb-6">
-                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold mr-4">1</div>
-                <h2 class="text-3xl font-bold text-slate-900">It Doesn't Read Words. It Reads Tokens.</h2>
+                <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 font-bold mr-4">1</div>
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white">It Doesn't Read Words. It Reads Tokens.</h2>
             </div>
             <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-4 text-lg text-slate-600">
+                <div class="space-y-4 text-lg text-slate-600 dark:text-slate-400">
                     <p>
                         To an AI, the sentence "I love coding" isn't three words. It's a sequence of numbers. 
                     </p>
                     <p>
                         First, text is chopped into chunks called <strong>Tokens</strong>. A token can be a whole word, part of a word, or even a space. Common words are usually single tokens, while complex or rare words might be split up.
                     </p>
-                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 text-sm text-blue-800">
+                    <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 text-sm text-blue-800 dark:text-blue-200">
                         <strong>Try it:</strong> Type in the box to see how an LLM sees your text. Notice how spaces and partial words are handled.
                     </div>
                 </div>
                 
                 <!-- Interactive Tokenizer -->
-                <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Input Text</label>
-                    <textarea id="tokenizer-input" class="w-full p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition font-sans text-lg mb-4 resize-none" rows="3" placeholder="Type something here...">Artificial Intelligence is fascinating!</textarea>
+                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-6 transition-colors duration-300">
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Input Text</label>
+                    <textarea id="tokenizer-input" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition font-sans text-lg mb-4 resize-none" rows="3" placeholder="Type something here...">Artificial Intelligence is fascinating!</textarea>
                     
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Token View (Simulated)</label>
-                    <div id="token-output" class="flex flex-wrap gap-2 min-h-[60px] p-4 bg-slate-50 rounded-lg border border-slate-200 code-font text-sm">
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Token View (Simulated)</label>
+                    <div id="token-output" class="flex flex-wrap gap-2 min-h-[60px] p-4 bg-slate-50 dark:bg-slate-950/50 rounded-lg border border-slate-200 dark:border-slate-700 code-font text-sm">
                         <!-- Tokens injected here -->
                     </div>
-                    <div class="mt-4 flex justify-between text-xs text-slate-500">
+                    <div class="mt-4 flex justify-between text-xs text-slate-500 dark:text-slate-400">
                         <span id="token-count">Token count: 0</span>
                         <span>*Colors represent distinct tokens</span>
                     </div>
@@ -157,20 +183,20 @@
         <!-- STEP 2: EMBEDDINGS -->
         <section id="embeddings" class="scroll-mt-24">
             <div class="flex items-center mb-6">
-                <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold mr-4">2</div>
-                <h2 class="text-3xl font-bold text-slate-900">Words into Numbers (Embeddings)</h2>
+                <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-bold mr-4">2</div>
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Words into Numbers (Embeddings)</h2>
             </div>
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <!-- Interactive Embedding Map -->
-                <div class="order-2 md:order-1 bg-slate-900 rounded-2xl shadow-xl overflow-hidden relative h-[400px] group cursor-crosshair">
-                    <div class="absolute top-4 left-4 z-10 bg-black/50 backdrop-blur px-3 py-1 rounded text-white text-xs">
+                <div class="order-2 md:order-1 bg-slate-900 rounded-2xl shadow-xl overflow-hidden relative h-[400px] group cursor-crosshair border border-slate-800">
+                    <div class="absolute top-4 left-4 z-10 bg-black/50 backdrop-blur px-3 py-1 rounded text-white text-xs border border-white/10">
                         2D Visualization of Vector Space
                     </div>
                     <canvas id="embedding-canvas" class="w-full h-full block"></canvas>
-                    <div id="embedding-tooltip" class="absolute pointer-events-none bg-white px-3 py-2 rounded shadow-lg text-sm font-bold opacity-0 transition-opacity z-20" style="top:0; left:0;"></div>
+                    <div id="embedding-tooltip" class="absolute pointer-events-none bg-white dark:bg-slate-800 px-3 py-2 rounded shadow-lg text-sm font-bold opacity-0 transition-opacity z-20 border border-slate-200 dark:border-slate-700 dark:text-white" style="top:0; left:0;"></div>
                 </div>
 
-                <div class="order-1 md:order-2 space-y-4 text-lg text-slate-600">
+                <div class="order-1 md:order-2 space-y-4 text-lg text-slate-600 dark:text-slate-400">
                     <p>
                         Once tokenized, each token is converted into a list of numbers called a <strong>Vector</strong>.
                     </p>
@@ -180,7 +206,7 @@
                     <p>
                         This allows the AI to understand relationships. It knows that "Paris" is to "France" what "Tokyo" is to "Japan" just by looking at the distance and direction between them.
                     </p>
-                    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 text-sm text-indigo-800">
+                    <div class="bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-indigo-500 p-4 text-sm text-indigo-800 dark:text-indigo-200">
                         <strong>Interactive Map:</strong> Hover over the dots to see words clustered by meaning (Technology, Food, Animals, Royalty).
                     </div>
                 </div>
@@ -190,30 +216,30 @@
         <!-- STEP 3: ATTENTION -->
         <section id="attention" class="scroll-mt-24">
             <div class="flex items-center mb-6">
-                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold mr-4">3</div>
-                <h2 class="text-3xl font-bold text-slate-900">The Attention Mechanism</h2>
+                <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center text-purple-600 dark:text-purple-300 font-bold mr-4">3</div>
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white">The Attention Mechanism</h2>
             </div>
             <div class="space-y-6">
-                <p class="text-lg text-slate-600 max-w-3xl">
+                <p class="text-lg text-slate-600 dark:text-slate-400 max-w-3xl">
                     This is the secret sauce. When an LLM processes a word, it "looks back" at all previous words to figure out the context. It assigns an <strong>Attention Score</strong> to determine how important other words are to the current word.
                 </p>
 
-                <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 relative overflow-hidden">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-8 relative overflow-hidden transition-colors duration-300">
                     <div class="text-center mb-8">
-                        <h3 class="font-bold text-slate-700">Hover over a word to see what the AI "pays attention" to:</h3>
+                        <h3 class="font-bold text-slate-700 dark:text-slate-300">Hover over a word to see what the AI "pays attention" to:</h3>
                     </div>
 
                     <!-- Sentence Container -->
-                    <div class="relative flex justify-center flex-wrap gap-x-3 gap-y-8 text-xl md:text-2xl font-serif max-w-2xl mx-auto py-12" id="attention-sentence">
+                    <div class="relative flex justify-center flex-wrap gap-x-3 gap-y-8 text-xl md:text-2xl font-serif max-w-2xl mx-auto py-12 text-slate-800 dark:text-slate-100" id="attention-sentence">
                         <!-- Words injected by JS -->
                     </div>
 
-                    <div class="absolute bottom-4 left-0 w-full text-center text-sm text-slate-400">
+                    <div class="absolute bottom-4 left-0 w-full text-center text-sm text-slate-400 dark:text-slate-500">
                         Thickness of line = Strength of attention
                     </div>
                 </div>
                 
-                <p class="text-sm text-slate-500 italic">
+                <p class="text-sm text-slate-500 dark:text-slate-400 italic">
                     Example: In "The animal didn't cross the street because <strong>it</strong> was too tired", when the AI reads "it", it pays huge attention to "animal" to know what "it" refers to.
                 </p>
             </div>
@@ -222,13 +248,13 @@
         <!-- STEP 4: PREDICTION & TEMPERATURE -->
         <section id="prediction" class="scroll-mt-24">
             <div class="flex items-center mb-6">
-                <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold mr-4">4</div>
-                <h2 class="text-3xl font-bold text-slate-900">Predicting the Future</h2>
+                <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-300 font-bold mr-4">4</div>
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Predicting the Future</h2>
             </div>
             
             <div class="grid lg:grid-cols-3 gap-8">
                 <!-- Left: Explanation -->
-                <div class="lg:col-span-1 space-y-4 text-lg text-slate-600">
+                <div class="lg:col-span-1 space-y-4 text-lg text-slate-600 dark:text-slate-400">
                     <p>
                         The LLM doesn't just pick one word. It calculates the probability for <em>every possible word</em> in its vocabulary appearing next.
                     </p>
@@ -242,11 +268,11 @@
                 </div>
 
                 <!-- Right: Interactive Demo -->
-                <div class="lg:col-span-2 bg-slate-900 text-white rounded-2xl shadow-2xl p-6 md:p-8 flex flex-col">
+                <div class="lg:col-span-2 bg-slate-900 rounded-2xl shadow-2xl p-6 md:p-8 flex flex-col border border-slate-800">
                     
                     <!-- Context Display -->
-                    <div class="mb-6 font-mono text-lg">
-                        <span class="text-slate-400">INPUT:</span><br>
+                    <div class="mb-6 font-mono text-lg text-slate-200">
+                        <span class="text-slate-500">INPUT:</span><br>
                         "The quick brown fox jumps over the <span id="target-blank" class="border-b-2 border-emerald-500 text-emerald-400 animate-pulse">...</span>"
                     </div>
 
@@ -267,7 +293,7 @@
                     <div class="flex-1">
                         <div class="flex justify-between items-end mb-2">
                             <span class="text-sm font-bold text-slate-300">Top Probabilities</span>
-                            <button id="generate-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center">
+                            <button id="generate-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center shadow-lg shadow-emerald-900/20">
                                 <i data-lucide="play" class="w-4 h-4 mr-1"></i> Generate Next
                             </button>
                         </div>
@@ -286,35 +312,35 @@
         </section>
 
         <!-- Conclusion -->
-        <section class="text-center py-12 bg-white rounded-3xl shadow-sm border border-slate-200">
-            <h2 class="text-2xl font-bold text-slate-900 mb-4">Summary</h2>
+        <section class="text-center py-12 bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors duration-300">
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Summary</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 px-4 max-w-4xl mx-auto">
-                <div class="p-4 bg-slate-50 rounded-xl">
+                <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl transition-colors">
                     <i data-lucide="scissors" class="w-8 h-8 text-blue-500 mx-auto mb-2"></i>
-                    <h3 class="font-bold text-sm">1. Tokenize</h3>
-                    <p class="text-xs text-slate-500">Chop text into numbers</p>
+                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200">1. Tokenize</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Chop text into numbers</p>
                 </div>
-                <div class="p-4 bg-slate-50 rounded-xl">
+                <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl transition-colors">
                     <i data-lucide="network" class="w-8 h-8 text-indigo-500 mx-auto mb-2"></i>
-                    <h3 class="font-bold text-sm">2. Embed</h3>
-                    <p class="text-xs text-slate-500">Map meaning in space</p>
+                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200">2. Embed</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Map meaning in space</p>
                 </div>
-                <div class="p-4 bg-slate-50 rounded-xl">
+                <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl transition-colors">
                     <i data-lucide="search" class="w-8 h-8 text-purple-500 mx-auto mb-2"></i>
-                    <h3 class="font-bold text-sm">3. Attend</h3>
-                    <p class="text-xs text-slate-500">Find context links</p>
+                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200">3. Attend</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Find context links</p>
                 </div>
-                <div class="p-4 bg-slate-50 rounded-xl">
+                <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl transition-colors">
                     <i data-lucide="dices" class="w-8 h-8 text-emerald-500 mx-auto mb-2"></i>
-                    <h3 class="font-bold text-sm">4. Predict</h3>
-                    <p class="text-xs text-slate-500">Roll dice for next word</p>
+                    <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200">4. Predict</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Roll dice for next word</p>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm">
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm border-t border-slate-800">
         <p>&copy; 2024 LLM Explainer. Built for educational purposes.</p>
     </footer>
 
@@ -322,30 +348,48 @@
         // Initialize Lucide Icons
         lucide.createIcons();
 
+        // --- DARK MODE TOGGLE ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        // Check local storage or system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+        });
+
+
         // --- 1. TOKENIZER LOGIC (SIMULATED) ---
         const tokenInput = document.getElementById('tokenizer-input');
         const tokenOutput = document.getElementById('token-output');
         const tokenCount = document.getElementById('token-count');
 
         const colors = [
-            'bg-blue-100 text-blue-800 border-blue-200',
-            'bg-green-100 text-green-800 border-green-200',
-            'bg-purple-100 text-purple-800 border-purple-200',
-            'bg-orange-100 text-orange-800 border-orange-200',
-            'bg-pink-100 text-pink-800 border-pink-200',
-            'bg-cyan-100 text-cyan-800 border-cyan-200'
+            'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/50 dark:text-blue-200 dark:border-blue-800',
+            'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/50 dark:text-green-200 dark:border-green-800',
+            'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/50 dark:text-purple-200 dark:border-purple-800',
+            'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/50 dark:text-orange-200 dark:border-orange-800',
+            'bg-pink-100 text-pink-800 border-pink-200 dark:bg-pink-900/50 dark:text-pink-200 dark:border-pink-800',
+            'bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900/50 dark:text-cyan-200 dark:border-cyan-800'
         ];
 
         function simulateTokenization(text) {
             // A crude simulation of BPE/WordPiece tokenization
-            // Logic: Split by spaces, but also split common suffixes or punctuation
             let rawTokens = text.match(/[\w']+|[.,!?;]|\s+/g) || [];
             
-            // Further simulate sub-word splitting for longer words (fake but educational)
             let refinedTokens = [];
             rawTokens.forEach(t => {
                 if (t.length > 5 && /^[a-zA-Z]+$/.test(t)) {
-                    // Split long words arbitrarily to show sub-tokens
                     let mid = Math.floor(t.length / 2);
                     refinedTokens.push(t.slice(0, mid));
                     refinedTokens.push(t.slice(mid));
@@ -365,12 +409,10 @@
             tokens.forEach((token, index) => {
                 const chip = document.createElement('span');
                 const colorClass = colors[index % colors.length];
-                // Replace spaces with a visible symbol for clarity
                 const displayToken = token.replace(/\s/g, '&nbsp;'); 
                 
                 chip.className = `token-chip inline-block px-2 py-1 m-1 rounded border ${colorClass} font-mono cursor-default select-none`;
                 chip.innerHTML = displayToken;
-                chip.title = `ID: ${Math.floor(Math.random() * 50000)}`; // Fake ID
                 tokenOutput.appendChild(chip);
             });
 
@@ -378,7 +420,7 @@
         }
 
         tokenInput.addEventListener('input', renderTokens);
-        renderTokens(); // Initial run
+        renderTokens(); 
 
         // --- 2. EMBEDDINGS CANVAS ---
         const canvas = document.getElementById('embedding-canvas');
@@ -386,7 +428,6 @@
         const tooltip = document.getElementById('embedding-tooltip');
         let width, height;
 
-        // Data: Clusters of words
         const clusters = [
             { name: "Royalty", color: "#6366f1", words: ["King", "Queen", "Prince", "Princess", "Castle", "Throne", "Crown", "Monarch"] },
             { name: "Technology", color: "#3b82f6", words: ["Computer", "AI", "Robot", "Code", "Internet", "Screen", "Data", "Chip"] },
@@ -409,7 +450,6 @@
         function initPoints() {
             points = [];
             clusters.forEach((cluster, i) => {
-                // Distribute clusters in quadrants
                 const cx = (i % 2 === 0) ? width * 0.3 : width * 0.7;
                 const cy = (i < 2) ? height * 0.3 : height * 0.7;
 
@@ -429,7 +469,6 @@
         function draw() {
             ctx.clearRect(0, 0, width, height);
             
-            // Draw connections between points in same cluster (faint)
             ctx.globalAlpha = 0.2;
             clusters.forEach(cluster => {
                 ctx.strokeStyle = cluster.color;
@@ -437,7 +476,7 @@
                 const clusterPoints = points.filter(p => p.category === cluster.name);
                 for(let i=0; i<clusterPoints.length; i++) {
                     for(let j=i+1; j<clusterPoints.length; j++) {
-                        if(Math.random() > 0.8) { // Only some lines
+                        if(Math.random() > 0.8) {
                             ctx.moveTo(clusterPoints[i].x, clusterPoints[i].y);
                             ctx.lineTo(clusterPoints[j].x, clusterPoints[j].y);
                         }
@@ -447,20 +486,17 @@
             });
             ctx.globalAlpha = 1.0;
 
-            // Draw points
             points.forEach(p => {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
                 ctx.fillStyle = p.color;
                 ctx.fill();
-                // Text label (faint unless hovered - simulated logic)
                 ctx.fillStyle = "rgba(255,255,255,0.7)";
                 ctx.font = "10px Inter";
                 ctx.fillText(p.word, p.x + 8, p.y + 3);
             });
         }
 
-        // Mouse Interaction for Canvas
         canvas.addEventListener('mousemove', (e) => {
             const rect = canvas.getBoundingClientRect();
             const mouseX = e.clientX - rect.left;
@@ -471,11 +507,10 @@
                 const dist = Math.sqrt((mouseX - p.x)**2 + (mouseY - p.y)**2);
                 if (dist < 15) {
                     tooltip.style.opacity = 1;
-                    tooltip.style.transform = `translate(${e.clientX + 10}px, ${e.clientY + 10}px)`; // Fixed relative to viewport via CSS
-                    // Fix: calculate relative to container for cleanliness, but simplified here
+                    tooltip.style.transform = `translate(${e.clientX + 10}px, ${e.clientY + 10}px)`; 
                     tooltip.style.left = (mouseX + 10) + 'px';
                     tooltip.style.top = (mouseY + 10) + 'px';
-                    tooltip.innerHTML = `<span style="color:${p.color}">●</span> ${p.word}<br><span class="text-xs text-slate-400">${p.category}</span>`;
+                    tooltip.innerHTML = `<span style="color:${p.color}">●</span> ${p.word}<br><span class="text-xs text-slate-400 dark:text-slate-300">${p.category}</span>`;
                     p.radius = 8;
                     hovered = true;
                 } else {
@@ -490,7 +525,7 @@
         });
 
         window.addEventListener('resize', resizeCanvas);
-        setTimeout(resizeCanvas, 100); // Delay for layout to settle
+        setTimeout(resizeCanvas, 100);
 
         // --- 3. ATTENTION MECHANISM ---
         const attentionSentence = [
@@ -501,7 +536,7 @@
             { text: "the", focus: ["cross"] },
             { text: "street", focus: ["cross", "the"] },
             { text: "because", focus: ["cross", "didn't"] },
-            { text: "it", focus: ["animal", "street"] }, // Key ambiguity resolution
+            { text: "it", focus: ["animal", "street"] },
             { text: "was", focus: ["it"] },
             { text: "too", focus: ["was"] },
             { text: "tired", focus: ["animal", "it"] },
@@ -515,7 +550,6 @@
             attContainer.innerHTML = '';
             wordElements = [];
 
-            // Create SVG Layer
             const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.classList.add('connections');
             attContainer.appendChild(svg);
@@ -523,7 +557,7 @@
             attentionSentence.forEach((item, index) => {
                 const span = document.createElement('span');
                 span.textContent = item.text;
-                span.className = "relative z-20 cursor-pointer px-1 rounded transition hover:bg-blue-100 hover:text-blue-700";
+                span.className = "relative z-20 cursor-pointer px-1 rounded transition hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-700 dark:hover:text-blue-200";
                 span.dataset.index = index;
                 
                 span.addEventListener('mouseenter', () => highlightAttention(index, svg));
@@ -535,7 +569,6 @@
         }
 
         function highlightAttention(currentIndex, svg) {
-            // Clear old lines
             while(svg.firstChild) svg.removeChild(svg.firstChild);
 
             const currentData = attentionSentence[currentIndex];
@@ -543,36 +576,32 @@
             const currentRect = currentEl.getBoundingClientRect();
             const containerRect = attContainer.getBoundingClientRect();
 
-            // Highlight target words
             currentData.focus.forEach(targetText => {
-                // Find previous occurrences of this word
                 const targetIndex = attentionSentence.findIndex((w, i) => w.text === targetText && i < currentIndex);
                 
                 if (targetIndex !== -1) {
                     const targetEl = wordElements[targetIndex];
                     const targetRect = targetEl.getBoundingClientRect();
 
-                    // Calculate relative coordinates
                     const x1 = currentRect.left + (currentRect.width / 2) - containerRect.left;
                     const y1 = currentRect.top + (currentRect.height / 2) - containerRect.top;
                     const x2 = targetRect.left + (targetRect.width / 2) - containerRect.left;
                     const y2 = targetRect.top + (targetRect.height / 2) - containerRect.top;
 
-                    // Draw Bezier Curve
                     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                    const midY = Math.min(y1, y2) - 40; // Arc height
+                    const midY = Math.min(y1, y2) - 40; 
                     
                     const d = `M ${x1} ${y1} Q ${(x1+x2)/2} ${midY} ${x2} ${y2}`;
                     
                     path.setAttribute("d", d);
                     path.setAttribute("fill", "none");
-                    path.setAttribute("stroke", "#3b82f6"); // Blue line
+                    path.setAttribute("stroke", "#3b82f6"); 
                     path.setAttribute("stroke-width", "2");
                     path.setAttribute("stroke-opacity", "0.6");
                     
                     svg.appendChild(path);
 
-                    targetEl.classList.add("bg-yellow-100", "text-yellow-800", "font-bold");
+                    targetEl.classList.add("bg-yellow-100", "dark:bg-yellow-900/50", "text-yellow-800", "dark:text-yellow-200", "font-bold");
                 }
             });
         }
@@ -580,7 +609,7 @@
         function clearAttention(svg) {
             while(svg.firstChild) svg.removeChild(svg.firstChild);
             wordElements.forEach(el => {
-                el.classList.remove("bg-yellow-100", "text-yellow-800", "font-bold");
+                el.classList.remove("bg-yellow-100", "dark:bg-yellow-900/50", "text-yellow-800", "dark:text-yellow-200", "font-bold");
             });
         }
 
@@ -595,21 +624,15 @@
         const resultDisplay = document.getElementById('result-display');
         const chosenWordEl = document.getElementById('chosen-word');
 
-        // Base probabilities for "The quick brown fox jumps over the ..."
         const baseProbs = [
             { word: "lazy", prob: 0.8 },
             { word: "fence", prob: 0.1 },
             { word: "log", prob: 0.05 },
             { word: "moon", prob: 0.03 },
-            { word: "spaghetti", prob: 0.001 } // Very unlikely
+            { word: "spaghetti", prob: 0.001 } 
         ];
 
-        // Softmax simulation with temperature
         function calculateSoftmax(items, temp) {
-            // Apply temperature: z_i / T
-            // Note: We'll fake the "logits" by taking log of prob first, then applying temp, then softmax
-            // Or simpler: p_new = p_old ^ (1/T) / sum(...)
-            
             let newProbs = items.map(item => ({
                 word: item.word,
                 score: Math.pow(item.prob, 1 / temp)
@@ -626,19 +649,16 @@
             const temp = parseFloat(slider.value);
             tempVal.textContent = temp.toFixed(1);
             
-            // Update Description
             if(temp < 0.4) { tempDesc.textContent = "Deterministic"; tempDesc.className = "text-xs px-2 py-1 rounded bg-blue-500/20 text-blue-300"; }
             else if(temp < 0.9) { tempDesc.textContent = "Balanced"; tempDesc.className = "text-xs px-2 py-1 rounded bg-green-500/20 text-green-300"; }
             else { tempDesc.textContent = "Chaotic"; tempDesc.className = "text-xs px-2 py-1 rounded bg-red-500/20 text-red-300"; }
 
-            // Recalculate Probs
             const currentProbs = calculateSoftmax(baseProbs, temp);
 
-            // Render Bars
             probBars.innerHTML = '';
             currentProbs.forEach(p => {
                 const percentage = (p.prob * 100).toFixed(1);
-                const barWidth = Math.max(percentage, 1); // min width for visibility
+                const barWidth = Math.max(percentage, 1); 
                 
                 const row = document.createElement('div');
                 row.className = "flex items-center gap-2";
@@ -674,16 +694,14 @@
             resultDisplay.classList.remove('hidden');
             chosenWordEl.textContent = word;
             chosenWordEl.parentElement.classList.remove('fade-in');
-            void chosenWordEl.parentElement.offsetWidth; // trigger reflow
+            void chosenWordEl.parentElement.offsetWidth; 
             chosenWordEl.parentElement.classList.add('fade-in');
 
-            // Also update the sentence above
             const blank = document.getElementById('target-blank');
             blank.textContent = word;
             blank.classList.remove('animate-pulse');
         });
 
-        // Initial setup
         updateViz();
 
     </script>
